@@ -1,6 +1,5 @@
-// src/components/ScreenshotItem.tsx
 import React from "react"
-import { X } from "lucide-react"
+import { X, Loader2 } from "lucide-react"
 
 interface Screenshot {
   path: string
@@ -25,40 +24,47 @@ const ScreenshotItem: React.FC<ScreenshotItemProps> = ({
   }
 
   return (
-    <>
-      <div
-        className={`border border-white relative ${isLoading ? "" : "group"}`}
-      >
-        <div className="w-full h-full relative">
-          {isLoading && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 z-10 flex items-center justify-center">
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            </div>
-          )}
-          <img
-            src={screenshot.preview}
-            alt="Screenshot"
-            className={`w-full h-full object-cover transition-transform duration-300 ${
-              isLoading
-                ? "opacity-50"
-                : "cursor-pointer group-hover:scale-105 group-hover:brightness-75"
-            }`}
-          />
-        </div>
+    <div className={`relative group aspect-video rounded-xl overflow-hidden border border-white/10 bg-black/20 shadow-lg transition-all duration-300 ${isLoading ? 'opacity-70' : 'hover:border-white/20 hover:scale-[1.02]'}`}>
+      <div className="w-full h-full">
+        {isLoading && (
+          <div className="absolute inset-0 bg-[#1a1b1e]/60 backdrop-blur-[2px] z-10 flex items-center justify-center">
+            <Loader2 className="w-5 h-5 text-white animate-spin" />
+          </div>
+        )}
+        <img
+          src={screenshot.preview}
+          alt={`Screenshot ${index + 1}`}
+          className={`w-full h-full object-cover transition-all duration-500 ${
+            isLoading
+              ? "scale-110 grayscale"
+              : "cursor-default group-hover:scale-110"
+          }`}
+        />
+        
+        {/* Overlay gradient */}
         {!isLoading && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              handleDelete()
-            }}
-            className="absolute top-2 left-2 p-1 rounded-full bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            aria-label="Delete screenshot"
-          >
-            <X size={16} />
-          </button>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         )}
       </div>
-    </>
+
+      {!isLoading && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            handleDelete()
+          }}
+          className="absolute top-2 right-2 p-1.5 rounded-full bg-red-500/80 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-500 hover:scale-110 shadow-lg translate-y-[-4px] group-hover:translate-y-0"
+          aria-label="Delete screenshot"
+        >
+          <X size={14} />
+        </button>
+      )}
+
+      {/* Index indicator */}
+      <div className="absolute bottom-2 left-2 px-1.5 py-0.5 rounded-md bg-black/40 backdrop-blur-md text-[10px] text-white/70 font-medium border border-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        #{index + 1}
+      </div>
+    </div>
   )
 }
 

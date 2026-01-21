@@ -1,9 +1,80 @@
 // ipcHandlers.ts
 
-import { ipcMain, app } from "electron"
+import { ipcMain, app, desktopCapturer } from "electron"
 import { AppState } from "./main"
+import path from "path"
+import fs from "fs"
+import { voskHelper } from "./VoskHelper"
+import { WebSearchHelper } from "./WebSearchHelper"
 
 export function initializeIpcHandlers(appState: AppState): void {
+  ipcMain.handle("web-search", async (_, query: string) => {
+    return await WebSearchHelper.search(query);
+  });
+
+  ipcMain.handle("start-transcription", async (_, lang: "en" | "el") => {
+    return await voskHelper.initialize(lang);
+  });
+
+  ipcMain.handle("process-audio-chunk", async (_, buffer: Buffer) => {
+    return voskHelper.processAudio(buffer);
+  });
+
+  ipcMain.handle("set-transcription-language", async (_, lang: "en" | "el") => {
+    return await voskHelper.setLanguage(lang);
+  });
+
+  ipcMain.handle("save-temp-transcription", async (_, text: string, speaker: string) => {
+    try {
+      const tempPath = path.join(app.getPath("temp"), "cluely_conversation.txt");
+      const timestamp = new Date().toLocaleTimeString();
+      const entry = `[${timestamp}] ${speaker}: ${text}\n`;
+      await fs.promises.appendFile(tempPath, entry, "utf8");
+      return { success: true, path: tempPath };
+    } catch (error: any) {
+      console.error("Error saving temp transcription:", error);
+      return { success: false, error: error.message };
+    }
+  });
+
+  ipcMain.handle("get-temp-transcription", async () => {
+    try {
+      const tempPath = path.join(app.getPath("temp"), "cluely_conversation.txt");
+      if (!fs.existsSync(tempPath)) return "";
+      return await fs.promises.readFile(tempPath, "utf8");
+    } catch (error) {
+      console.error("Error reading temp transcription:", error);
+      return "";
+    }
+  });
+
+  ipcMain.handle("clear-temp-transcription", async () => {
+    try {
+      const tempPath = path.join(app.getPath("temp"), "cluely_conversation.txt");
+      if (fs.existsSync(tempPath)) {
+        await fs.promises.unlink(tempPath);
+      }
+      return { success: true };
+    } catch (error) {
+      console.error("Error clearing temp transcription:", error);
+      return { success: false };
+    }
+  });
+
+  ipcMain.handle("get-desktop-sources", async () => {
+    try {
+      const sources = await desktopCapturer.getSources({ types: ["screen", "window"] })
+      return sources.map(source => ({
+        id: source.id,
+        name: source.name,
+        thumbnail: source.thumbnail.toDataURL()
+      }))
+    } catch (error) {
+      console.error("Error getting desktop sources:", error)
+      throw error
+    }
+  })
+
   ipcMain.handle(
     "update-content-dimensions",
     async (event, { width, height }: { width: number; height: number }) => {
@@ -175,10 +246,10 @@ export function initializeIpcHandlers(appState: AppState): void {
     }
   });
 
-  ipcMain.handle("switch-to-gemini", async (_, apiKey?: string) => {
+  ipcMain.handle("switch-to-gemini", async (_, model?: string, apiKey?: string) => {
     try {
       const llmHelper = appState.processingHelper.getLLMHelper();
-      await llmHelper.switchToGemini(apiKey);
+      await llmHelper.switchToGemini(model, apiKey);
       return { success: true };
     } catch (error: any) {
       console.error("Error switching to Gemini:", error);

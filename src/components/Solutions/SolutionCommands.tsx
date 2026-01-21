@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { IoLogOutOutline } from "react-icons/io5"
+import { HelpCircle, LogOut, Eye, EyeOff, Camera, Bug, RotateCcw, Command } from "lucide-react"
 
 interface SolutionCommandsProps {
   extraScreenshots: any[]
@@ -32,181 +32,94 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
   }
 
   return (
-    <div>
-      <div className="pt-2 w-fit">
-        <div className="text-xs text-white/90 backdrop-blur-md bg-black/60 rounded-lg py-2 px-4 flex items-center justify-center gap-4">
-          {/* Show/Hide */}
-          <div className="flex items-center gap-2 whitespace-nowrap">
-            <span className="text-[11px] leading-none">Show/Hide</span>
-            <div className="flex gap-1">
-              <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
-                ⌘
-              </button>
-              <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
-                B
-              </button>
-            </div>
+    <div className="pt-2 w-fit">
+      <div className="flex items-center gap-1 bg-black/90 backdrop-blur-2xl border border-white/10 rounded-full p-1 shadow-2xl">
+        {/* Visibility Toggle - Minimal */}
+        <div className="flex items-center gap-2 px-3 py-1.5 hover:bg-white/5 rounded-full transition-all cursor-pointer interactive group">
+          <Eye className="w-3.5 h-3.5 text-white/40 group-hover:text-white" />
+          <div className="flex gap-1">
+            <kbd className="bg-white/5 border border-white/5 rounded px-1.5 py-0.5 text-[9px] text-white/20 group-hover:text-white/40 font-mono">⌘B</kbd>
           </div>
+        </div>
 
-          {/* Screenshot */}
-          <div className="flex items-center gap-2 whitespace-nowrap">
-            <span className="text-[11px] leading-none truncate">
-              {extraScreenshots.length === 0
-                ? "Screenshot your code"
-                : "Screenshot"}
-            </span>
-            <div className="flex gap-1">
-              <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
-                ⌘
-              </button>
-              <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
-                H
-              </button>
-            </div>
+        <div className="w-px h-3 bg-white/5 mx-0.5" />
+
+        {/* Screenshot Action - Minimal */}
+        <div className="flex items-center gap-2 px-3 py-1.5 hover:bg-white/5 rounded-full transition-all cursor-pointer interactive group">
+          <Camera className="w-3.5 h-3.5 text-white/40 group-hover:text-white" />
+          <div className="flex gap-1">
+            <kbd className="bg-white/5 border border-white/5 rounded px-1.5 py-0.5 text-[9px] text-white/20 group-hover:text-white/40 font-mono">⌘H</kbd>
           </div>
-          {extraScreenshots.length > 0 && (
-            <div className="flex items-center gap-2 whitespace-nowrap">
-              <span className="text-[11px] leading-none">Debug</span>
+        </div>
+
+        {extraScreenshots.length > 0 && (
+          <>
+            <div className="w-px h-3 bg-white/5 mx-0.5" />
+            {/* Debug Action - Minimal */}
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-full transition-all cursor-pointer interactive group">
+              <Bug className="w-3.5 h-3.5 text-white" />
               <div className="flex gap-1">
-                <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
-                  ⌘
-                </button>
-                <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
-                  ↵
-                </button>
+                <kbd className="bg-white/10 border border-white/10 rounded px-1.5 py-0.5 text-[9px] text-white/60 font-mono">⌘↵</kbd>
+              </div>
+            </div>
+          </>
+        )}
+
+        <div className="w-px h-3 bg-white/5 mx-0.5" />
+
+        {/* Reset Action - Minimal */}
+        <div className="flex items-center gap-2 px-3 py-1.5 hover:bg-white/5 rounded-full transition-all cursor-pointer interactive group">
+          <RotateCcw className="w-3.5 h-3.5 text-white/40 group-hover:text-white" />
+          <div className="flex gap-1">
+            <kbd className="bg-white/5 border border-white/5 rounded px-1.5 py-0.5 text-[9px] text-white/20 group-hover:text-white/40 font-mono">⌘R</kbd>
+          </div>
+        </div>
+
+        <div className="w-px h-3 bg-white/5 mx-0.5" />
+
+        {/* Shortcuts Help - Minimal */}
+        <div
+          className="relative flex items-center"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <button className="w-8 h-8 flex items-center justify-center rounded-full text-white/20 hover:text-white hover:bg-white/5 transition-all">
+            <HelpCircle className="w-3.5 h-3.5" />
+          </button>
+
+          {isTooltipVisible && (
+            <div
+              ref={tooltipRef}
+              className="absolute bottom-full right-0 mb-3 w-48 pointer-events-none z-[100]"
+            >
+              <div className="p-3 bg-black/95 backdrop-blur-2xl rounded-2xl border border-white/10 text-white/40 text-[10px] shadow-2xl space-y-2">
+                <div className="flex justify-between items-center">
+                  <span>Toggle</span>
+                  <span className="font-mono">⌘B</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Capture</span>
+                  <span className="font-mono">⌘H</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Reset</span>
+                  <span className="font-mono">⌘R</span>
+                </div>
               </div>
             </div>
           )}
-
-          {/* Start Over */}
-          <div className="flex items-center gap-2 whitespace-nowrap">
-            <span className="text-[11px] leading-none">Start over</span>
-            <div className="flex gap-1">
-              <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
-                ⌘
-              </button>
-              <button className="bg-white/10 hover:bg-white/20 transition-colors rounded-md px-1.5 py-1 text-[11px] leading-none text-white/70">
-                R
-              </button>
-            </div>
-          </div>
-
-          {/* Question Mark with Tooltip */}
-          <div
-            className="relative inline-block"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            {/* Question mark circle */}
-            <div className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-colors flex items-center justify-center cursor-help z-10">
-              <span className="text-xs text-white/70">?</span>
-            </div>
-
-            {/* Tooltip Content */}
-            {isTooltipVisible && (
-              <div
-                ref={tooltipRef}
-                className="absolute top-full right-0 mt-2 w-80"
-                style={{ zIndex: 100 }}
-              >
-                <div className="p-3 text-xs bg-black/80 backdrop-blur-md rounded-lg border border-white/10 text-white/90 shadow-lg">
-                  {/* Tooltip content */}
-                  <div className="space-y-4">
-                    <h3 className="font-medium whitespace-nowrap">
-                      Keyboard Shortcuts
-                    </h3>
-                    <div className="space-y-3">
-                      {/* Toggle Command */}
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <span className="whitespace-nowrap">
-                            Toggle Window
-                          </span>
-                          <div className="flex gap-1">
-                            <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
-                              ⌘
-                            </span>
-                            <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
-                              B
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-[10px] leading-relaxed text-white/70 whitespace-nowrap truncate">
-                          Show or hide this window.
-                        </p>
-                      </div>
-                      {/* Screenshot Command */}
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <span className="whitespace-nowrap">
-                            Take Screenshot
-                          </span>
-                          <div className="flex gap-1">
-                            <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
-                              ⌘
-                            </span>
-                            <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
-                              H
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-[10px] leading-relaxed text-white/70 whitespace-nowrap truncate">
-                          Capture additional parts of the question or your
-                          solution for debugging help. Up to 5 extra screenshots
-                          are saved.
-                        </p>
-                      </div>
-                      {/* Debug Command */}
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <span className="whitespace-nowrap">Debug</span>
-                          <div className="flex gap-1">
-                            <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
-                              ⌘
-                            </span>
-                            <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
-                              ↵
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-[10px] leading-relaxed text-white/70 whitespace-nowrap truncate">
-                          Generate new solutions based on all previous and newly
-                          added screenshots.
-                        </p>
-                      </div>
-                      {/* Start Over Command */}
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <span className="whitespace-nowrap">Start Over</span>
-                          <div className="flex gap-1">
-                            <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
-                              ⌘
-                            </span>
-                            <span className="bg-white/10 px-1.5 py-0.5 rounded text-[10px] leading-none">
-                              R
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-[10px] leading-relaxed text-white/70 whitespace-nowrap truncate">
-                          Start fresh with a new question.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sign Out Button */}
-          <button
-            className="text-red-500/70 hover:text-red-500/90 transition-colors hover:cursor-pointer"
-            title="Sign Out"
-            onClick={() => window.electronAPI.quitApp()}
-          >
-            <IoLogOutOutline className="w-4 h-4" />
-          </button>
         </div>
+
+        <div className="w-px h-3 bg-white/5 mx-0.5" />
+
+        {/* Quit - Minimal */}
+        <button
+          className="w-8 h-8 flex items-center justify-center rounded-full text-white/10 hover:text-red-400 hover:bg-red-400/10 transition-all"
+          title="Sign Out"
+          onClick={() => window.electronAPI.quitApp()}
+        >
+          <LogOut className="w-3.5 h-3.5" />
+        </button>
       </div>
     </div>
   )

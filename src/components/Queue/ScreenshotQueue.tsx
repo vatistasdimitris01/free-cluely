@@ -23,15 +23,16 @@ const ScreenshotQueue: React.FC<ScreenshotQueueProps> = ({
   const displayScreenshots = screenshots.slice(0, 5)
 
   return (
-    <div className="grid grid-cols-5 gap-4">
+    <div className="flex flex-wrap gap-3">
       {displayScreenshots.map((screenshot, index) => (
-        <ScreenshotItem
-          key={screenshot.path}
-          isLoading={isLoading}
-          screenshot={screenshot}
-          index={index}
-          onDelete={onDeleteScreenshot}
-        />
+        <div key={screenshot.path} className="w-[calc(20%-10px)] min-w-[120px]">
+          <ScreenshotItem
+            isLoading={isLoading}
+            screenshot={screenshot}
+            index={index}
+            onDelete={onDeleteScreenshot}
+          />
+        </div>
       ))}
     </div>
   )

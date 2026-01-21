@@ -268,15 +268,16 @@ export class AppState {
 }
 
 // Application initialization
-async function initializeApp() {
-  const appState = AppState.getInstance()
-
-  // Initialize IPC handlers before window creation
-  initializeIpcHandlers(appState)
-
-  app.whenReady().then(() => {
-    console.log("App is ready")
-    appState.createWindow()
+  async function initializeApp() {
+    const appState = AppState.getInstance()
+  
+    app.whenReady().then(() => {
+      console.log("App is ready")
+      
+      // Initialize IPC handlers AFTER app is ready to ensure all subsystems are stable
+      initializeIpcHandlers(appState)
+      
+      appState.createWindow()
     appState.createTray()
     // Register global shortcuts using ShortcutsHelper
     appState.shortcutsHelper.registerGlobalShortcuts()

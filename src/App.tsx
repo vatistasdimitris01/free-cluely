@@ -42,6 +42,7 @@ declare global {
       // Audio Processing
       analyzeAudioFromBase64: (data: string, mimeType: string) => Promise<{ text: string; timestamp: number }>
       analyzeAudioFile: (path: string) => Promise<{ text: string; timestamp: number }>
+      getDesktopSources: () => Promise<Array<{ id: string; name: string; thumbnail: string }>>
 
       moveWindowLeft: () => Promise<void>
       moveWindowRight: () => Promise<void>

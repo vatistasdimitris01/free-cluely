@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useQuery, useQueryClient } from "react-query"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism"
+import { Sparkles, Terminal, Activity, Info, Loader2 } from "lucide-react"
 
 import ScreenshotQueue from "../components/Queue/ScreenshotQueue"
 import {
@@ -22,29 +23,36 @@ import Debug from "./Debug"
 export const ContentSection = ({
   title,
   content,
-  isLoading
+  isLoading,
+  icon: Icon
 }: {
   title: string
   content: React.ReactNode
   isLoading: boolean
+  icon?: any
 }) => (
-  <div className="space-y-2">
-    <h2 className="text-[13px] font-medium text-white tracking-wide">
-      {title}
-    </h2>
+  <div className="space-y-4 bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md">
+    <div className="flex items-center gap-2.5 border-b border-white/5 pb-3 mb-2">
+      {Icon && <Icon className="w-4 h-4 text-white/40" />}
+      <h2 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">
+        {title}
+      </h2>
+    </div>
     {isLoading ? (
-      <div className="mt-4 flex">
-        <p className="text-xs bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent animate-pulse">
-          Extracting problem statement...
+      <div className="flex items-center gap-3 py-4">
+        <Loader2 className="w-4 h-4 text-white/20 animate-spin" />
+        <p className="text-[13px] text-white/20 font-medium">
+          Processing request...
         </p>
       </div>
     ) : (
-      <div className="text-[13px] leading-[1.4] text-gray-100 max-w-[600px]">
+      <div className="text-[14px] leading-relaxed text-white/80 font-medium">
         {content}
       </div>
     )}
   </div>
 )
+
 const SolutionSection = ({
   title,
   content,
@@ -54,20 +62,22 @@ const SolutionSection = ({
   content: React.ReactNode
   isLoading: boolean
 }) => (
-  <div className="space-y-2">
-    <h2 className="text-[13px] font-medium text-white tracking-wide">
-      {title}
-    </h2>
+  <div className="space-y-4 bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md">
+    <div className="flex items-center gap-2.5 border-b border-white/5 pb-3 mb-2">
+      <Terminal className="w-4 h-4 text-white/40" />
+      <h2 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">
+        {title}
+      </h2>
+    </div>
     {isLoading ? (
-      <div className="space-y-1.5">
-        <div className="mt-4 flex">
-          <p className="text-xs bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent animate-pulse">
-            Loading solutions...
-          </p>
-        </div>
+      <div className="flex items-center gap-3 py-4">
+        <Loader2 className="w-4 h-4 text-white/20 animate-spin" />
+        <p className="text-[13px] text-white/20 font-medium">
+          Generating solution...
+        </p>
       </div>
     ) : (
-      <div className="w-full">
+      <div className="w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black/40">
         <SyntaxHighlighter
           showLineNumbers
           language="python"
@@ -75,7 +85,10 @@ const SolutionSection = ({
           customStyle={{
             maxWidth: "100%",
             margin: 0,
-            padding: "1rem",
+            padding: "1.5rem",
+            fontSize: "13px",
+            lineHeight: "1.7",
+            background: "transparent",
             whiteSpace: "pre-wrap",
             wordBreak: "break-all"
           }}
@@ -97,27 +110,29 @@ export const ComplexitySection = ({
   spaceComplexity: string | null
   isLoading: boolean
 }) => (
-  <div className="space-y-2">
-    <h2 className="text-[13px] font-medium text-white tracking-wide">
-      Complexity (Updated)
-    </h2>
+  <div className="space-y-4 bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md">
+    <div className="flex items-center gap-2.5 border-b border-white/5 pb-3 mb-2">
+      <Activity className="w-4 h-4 text-white/40" />
+      <h2 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">
+        Complexity
+      </h2>
+    </div>
     {isLoading ? (
-      <p className="text-xs bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent animate-pulse">
-        Calculating complexity...
-      </p>
+      <div className="flex items-center gap-3 py-4">
+        <Loader2 className="w-4 h-4 text-white/20 animate-spin" />
+        <p className="text-[13px] text-white/20 font-medium">
+          Analyzing complexity...
+        </p>
+      </div>
     ) : (
-      <div className="space-y-1">
-        <div className="flex items-start gap-2 text-[13px] leading-[1.4] text-gray-100">
-          <div className="w-1 h-1 rounded-full bg-blue-400/80 mt-2 shrink-0" />
-          <div>
-            <strong>Time:</strong> {timeComplexity}
-          </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+          <div className="text-[9px] text-white/20 uppercase tracking-[0.2em] font-bold">Time</div>
+          <div className="text-[14px] font-mono text-white/90 font-medium">{timeComplexity}</div>
         </div>
-        <div className="flex items-start gap-2 text-[13px] leading-[1.4] text-gray-100">
-          <div className="w-1 h-1 rounded-full bg-blue-400/80 mt-2 shrink-0" />
-          <div>
-            <strong>Space:</strong> {spaceComplexity}
-          </div>
+        <div className="space-y-2 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+          <div className="text-[9px] text-white/20 uppercase tracking-[0.2em] font-bold">Space</div>
+          <div className="text-[14px] font-mono text-white/90 font-medium">{spaceComplexity}</div>
         </div>
       </div>
     )}
@@ -255,19 +270,66 @@ const Solutions: React.FC<SolutionsProps> = ({ setView }) => {
         setCustomContent(null)
         setAudioResult(null)
 
-        // Start audio recording from user's microphone
+        // Start audio recording from user's microphone and system audio
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-          const mediaRecorder = new MediaRecorder(stream)
+          const micStream = await navigator.mediaDevices.getUserMedia({ audio: true })
+          
+          let systemStream: MediaStream | null = null
+          try {
+            const sources = await window.electronAPI.getDesktopSources()
+            const primarySource = sources.find((s: any) => s.name === 'Entire Screen' || s.name === 'Screen 1') || sources[0]
+            if (primarySource) {
+              systemStream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                  mandatory: {
+                    chromeMediaSource: 'desktop',
+                    chromeMediaSourceId: primarySource.id
+                  }
+                } as any,
+                video: {
+                  mandatory: {
+                    chromeMediaSource: 'desktop',
+                    chromeMediaSourceId: primarySource.id
+                  }
+                } as any
+              })
+            }
+          } catch (err) {
+            console.warn('Could not capture system audio in Solutions:', err)
+          }
+
+          const audioContext = new AudioContext()
+          const merger = audioContext.createChannelMerger(2)
+          const destination = audioContext.createMediaStreamDestination()
+
+          const micSource = audioContext.createMediaStreamSource(micStream)
+          micSource.connect(merger, 0, 0)
+
+          if (systemStream && systemStream.getAudioTracks().length > 0) {
+            const systemSource = audioContext.createMediaStreamSource(systemStream)
+            systemSource.connect(merger, 0, 1)
+          }
+
+          merger.connect(destination)
+          const mixedStream = destination.stream
+
+          const mediaRecorder = new MediaRecorder(mixedStream)
           const chunks: Blob[] = []
           mediaRecorder.ondataavailable = (e) => chunks.push(e.data)
           mediaRecorder.start()
           setAudioRecording(true)
+          
           // Record for 5 seconds (or adjust as needed)
           setTimeout(() => mediaRecorder.stop(), 5000)
           mediaRecorder.onstop = async () => {
             setAudioRecording(false)
-            const blob = new Blob(chunks, { type: chunks[0]?.type || 'audio/webm' })
+            const blob = new Blob(chunks, { type: 'audio/webm' })
+            
+            // Cleanup
+            micStream.getTracks().forEach(t => t.stop())
+            if (systemStream) systemStream.getTracks().forEach(t => t.stop())
+            if (audioContext.state !== 'closed') audioContext.close()
+
             const reader = new FileReader()
             reader.onloadend = async () => {
               const base64Data = (reader.result as string).split(',')[1]
@@ -485,16 +547,16 @@ const Solutions: React.FC<SolutionsProps> = ({ setView }) => {
             onTooltipVisibilityChange={handleTooltipVisibilityChange}
           />
 
-          {/* Main Content - Modified width constraints */}
-          <div className="w-full text-sm text-black bg-black/60 rounded-md">
-            <div className="rounded-lg overflow-hidden">
-              <div className="px-4 py-3 space-y-4 max-w-full">
+          {/* Main Content - Glassmorphism Container */}
+          <div className="w-full bg-black/40 backdrop-blur-3xl rounded-[40px] border border-white/10 shadow-2xl overflow-hidden">
+            <div className="px-8 py-10 space-y-8 max-w-full">
                 {/* Show Screenshot or Audio Result as main output if validation_type is manual */}
                 {problemStatementData?.validation_type === "manual" ? (
                   <ContentSection
                     title={problemStatementData?.output_format?.subtype === "voice" ? "Audio Result" : "Screenshot Result"}
                     content={problemStatementData.problem_statement}
                     isLoading={false}
+                    icon={problemStatementData?.output_format?.subtype === "voice" ? Sparkles : Info}
                   />
                 ) : (
                   <>
@@ -503,11 +565,13 @@ const Solutions: React.FC<SolutionsProps> = ({ setView }) => {
                       title={problemStatementData?.output_format?.subtype === "voice" ? "Voice Input" : "Problem Statement"}
                       content={problemStatementData?.problem_statement}
                       isLoading={!problemStatementData}
+                      icon={problemStatementData?.output_format?.subtype === "voice" ? Sparkles : Info}
                     />
                     {/* Show loading state when waiting for solution */}
                     {problemStatementData && !solutionData && (
-                      <div className="mt-4 flex">
-                        <p className="text-xs bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent animate-pulse">
+                      <div className="mt-6 flex items-center gap-3 px-2">
+                        <Loader2 className="w-4 h-4 text-white/20 animate-spin" />
+                        <p className="text-[13px] text-white/20 font-medium animate-pulse">
                           {problemStatementData?.output_format?.subtype === "voice" 
                             ? "Processing voice input..." 
                             : "Generating solutions..."}
@@ -519,17 +583,18 @@ const Solutions: React.FC<SolutionsProps> = ({ setView }) => {
                       <>
                         <ContentSection
                           title="Analysis"
+                          icon={Sparkles}
                           content={
                             thoughtsData && (
-                              <div className="space-y-3">
-                                <div className="space-y-1">
+                              <div className="space-y-4">
+                                <div className="space-y-3">
                                   {thoughtsData.map((thought, index) => (
                                     <div
                                       key={index}
-                                      className="flex items-start gap-2"
+                                      className="flex items-start gap-3 group"
                                     >
-                                      <div className="w-1 h-1 rounded-full bg-blue-400/80 mt-2 shrink-0" />
-                                      <div>{thought}</div>
+                                      <div className="w-1 h-1 rounded-full bg-white/20 mt-2 shrink-0 group-hover:bg-white/40 transition-colors" />
+                                      <div className="text-white/60 group-hover:text-white/90 transition-colors">{thought}</div>
                                     </div>
                                   ))}
                                 </div>
@@ -539,24 +604,21 @@ const Solutions: React.FC<SolutionsProps> = ({ setView }) => {
                           isLoading={!thoughtsData}
                         />
                         <SolutionSection
-                          title={problemStatementData?.output_format?.subtype === "voice" ? "Response" : "Solution"}
+                          title="Implementation"
                           content={solutionData}
                           isLoading={!solutionData}
                         />
-                        {problemStatementData?.output_format?.subtype !== "voice" && (
-                          <ComplexitySection
-                            timeComplexity={timeComplexityData}
-                            spaceComplexity={spaceComplexityData}
-                            isLoading={!timeComplexityData || !spaceComplexityData}
-                          />
-                        )}
+                        <ComplexitySection
+                          timeComplexity={timeComplexityData}
+                          spaceComplexity={spaceComplexityData}
+                          isLoading={!timeComplexityData}
+                        />
                       </>
                     )}
                   </>
                 )}
               </div>
             </div>
-          </div>
         </div>
       )}
     </>

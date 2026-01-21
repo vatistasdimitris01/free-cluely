@@ -25,6 +25,8 @@ export interface ElectronAPI {
   analyzeAudioFromBase64: (data: string, mimeType: string) => Promise<{ text: string; timestamp: number }>
   analyzeAudioFile: (path: string) => Promise<{ text: string; timestamp: number }>
   quitApp: () => Promise<void>
+  getDesktopSources: () => Promise<Array<{ id: string; name: string; thumbnail: string }>>
+  switchToGemini: (model?: string, apiKey?: string) => Promise<{ success: boolean; error?: string }>
   invoke: (channel: string, ...args: any[]) => Promise<any>
 }
 

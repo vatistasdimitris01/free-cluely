@@ -11,21 +11,23 @@ module.exports = {
         in: "in 0.2s ease-out",
         out: "out 0.2s ease-in",
         pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        shimmer: "shimmer 2s linear infinite",
-        "text-gradient-wave": "textGradientWave 2s infinite ease-in-out"
+        shimmer: "shimmer 1.8s linear infinite",
+        "text-gradient-wave": "textGradientWave 2s infinite ease-in-out",
+        "loading-bar": "loadingBar 2s ease-in-out infinite"
       },
       keyframes: {
+        loadingBar: {
+          "0%": { transform: "translateX(-100%)" },
+          "50%": { transform: "translateX(200%)" },
+          "100%": { transform: "translateX(-100%)" }
+        },
         textGradientWave: {
           "0%": { backgroundPosition: "0% 50%" },
           "100%": { backgroundPosition: "200% 50%" }
         },
         shimmer: {
-          "0%": {
-            backgroundPosition: "200% 0"
-          },
-          "100%": {
-            backgroundPosition: "-200% 0"
-          }
+          "0%": { backgroundPosition: "100% 0" },
+          "100%": { backgroundPosition: "-100% 0" },
         },
         in: {
           "0%": { transform: "translateY(100%)", opacity: 0 },
@@ -46,5 +48,7 @@ module.exports = {
       }
     }
   },
-  plugins: []
+  plugins: [
+    require('@tailwindcss/typography'),
+  ]
 }
